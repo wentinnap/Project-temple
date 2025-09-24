@@ -32,7 +32,7 @@ export default function AdminSidebar() {
     { path: "/admin/dashboard", icon: "📊", label: "แดชบอร์ด" },
     { path: "/admin/news", icon: "📰", label: "จัดการข่าว" },
     { path: "/admin/Adminbooking", icon: "📖", label: "จัดการการจอง" },
-    { path: "/admin/events", icon: "📅", label: "กิจกรรม" },
+    { path: "/admin/events", icon: "📅", label: "ปฏิทินกิจกรรม" },
     { path: "/admin/monks", icon: "🙏", label: "พระสงฆ์" },
     { path: "/admin/users", icon: "👥", label: "ผู้ใช้งาน" }
   ];

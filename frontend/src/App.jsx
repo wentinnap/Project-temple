@@ -4,6 +4,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/frontend/Home";
 import About from "./pages/frontend/about";
+import NewsPage from "./pages/frontend/NewsPage";
 import TempleCalendar from "./pages/frontend/TempleCalendar";
 import Donate from "./pages/frontend/Donate";
 import QA from "./pages/frontend/Q&A";
@@ -80,6 +81,7 @@ function App() {
         {/* Home & About */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/news" element={<NewsPage />} />
         <Route path="/Calendar" element={<TempleCalendar />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/Q&A" element={<QA />} />

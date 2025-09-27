@@ -7,6 +7,7 @@ export default function Navbar() {
   const { user, role, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
@@ -82,28 +83,153 @@ export default function Navbar() {
             scrolled ? "text-gray-700" : "text-white"
           }`}
         >
-          {[
-            { to: "/", label: "หน้าแรก" },
-            { to: "/about", label: "เกี่ยวกับวัด" },
-            { to: "/news", label: "ข่าวสาร" },
-            { to: "/Calendar", label: "ปฏิทินกิจกรรม" },
-            { to: "/Donate", label: "ทำบุญ/บริจาค" },
-            { to: "/Q&A", label: "ถาม-ตอบ" } // เพิ่มปุ่มถาม-ตอบ
-          ].map((item) => (
-            <li key={item.to}>
-              <Link 
-                to={item.to} 
-                className={`px-3 py-2 rounded-lg transition-all duration-300 relative group ${
+          <li>
+            <Link 
+              to="/" 
+              className={`px-3 py-2 rounded-lg transition-all duration-300 relative group ${
+                scrolled 
+                  ? "hover:text-orange-600 hover:bg-orange-50" 
+                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+              }`}
+            >
+              หน้าแรก
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </li>
+          
+          <li>
+            <Link 
+              to="/about" 
+              className={`px-3 py-2 rounded-lg transition-all duration-300 relative group ${
+                scrolled 
+                  ? "hover:text-orange-600 hover:bg-orange-50" 
+                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+              }`}
+            >
+              เกี่ยวกับวัด
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </li>
+
+          {/* ข่าวสาร Dropdown */}
+          <li className="relative group">
+            <button
+              className={`flex items-center px-4 py-2.5 rounded-lg transition-all duration-300 relative ${
+                scrolled 
+                  ? "hover:text-orange-600 hover:bg-orange-50" 
+                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+              } ${isNewsDropdownOpen ? (scrolled ? 'bg-orange-50 text-orange-600' : 'bg-white/10 text-orange-300') : ''}`}
+              onClick={() => setIsNewsDropdownOpen(!isNewsDropdownOpen)}
+            >
+              ข่าวสาร
+              <svg
+                className={`w-4 h-4 ml-2 transition-transform duration-300 ${isNewsDropdownOpen ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
+            </button>
+
+            {/* Dropdown Menu */}
+            {isNewsDropdownOpen && (
+              <div 
+                className={`absolute top-full left-0 mt-3 w-64 rounded-xl shadow-2xl py-3 border overflow-hidden z-50 ${
                   scrolled 
-                    ? "hover:text-orange-600 hover:bg-orange-50" 
-                    : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+                    ? 'bg-white/95 backdrop-blur-lg border-gray-200 text-gray-700' 
+                    : 'bg-white/90 backdrop-blur-lg border-white/20 text-gray-700'
                 }`}
               >
-                {item.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
-              </Link>
-            </li>
-          ))}
+                <Link
+                  to="/news"
+                  className={`flex items-center px-5 py-3.5 transition-all duration-200 ${
+                    scrolled
+                      ? 'hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600'
+                      : 'hover:bg-white/20 hover:text-orange-600'
+                  }`}
+                  onClick={() => setIsNewsDropdownOpen(false)}
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium">ข่าวสารทั้งหมด</div>
+                    <div className="text-xs text-gray-500">ข่าวสารและประกาศ</div>
+                  </div>
+                </Link>
+                <Link
+                  to="/Calendar"
+                  className={`flex items-center px-5 py-3.5 transition-all duration-200 ${
+                    scrolled
+                      ? 'hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600'
+                      : 'hover:bg-white/20 hover:text-orange-600'
+                  }`}
+                  onClick={() => setIsNewsDropdownOpen(false)}
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a2 2 0 012 2v13a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium">ปฏิทินกิจกรรม</div>
+                    <div className="text-xs text-gray-500">กิจกรรมและพิธีกรรม</div>
+                  </div>
+                </Link>
+                <Link
+                  to="/gallery"
+                  className={`flex items-center px-5 py-3.5 transition-all duration-200 ${
+                    scrolled
+                      ? 'hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600'
+                      : 'hover:bg-white/20 hover:text-orange-600'
+                  }`}
+                  onClick={() => setIsNewsDropdownOpen(false)}
+                >
+                  <div className="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium">แกลอรี่กิจกรรม</div>
+                    <div className="text-xs text-gray-500">รูปภาพกิจกรรมวัด</div>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </li>
+
+          <li>
+            <Link 
+              to="/Donate" 
+              className={`px-3 py-2 rounded-lg transition-all duration-300 relative group ${
+                scrolled 
+                  ? "hover:text-orange-600 hover:bg-orange-50" 
+                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+              }`}
+            >
+              ทำบุญ/บริจาค
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </li>
+
+          <li>
+            <Link 
+              to="/Q&A" 
+              className={`px-3 py-2 rounded-lg transition-all duration-300 relative group ${
+                scrolled 
+                  ? "hover:text-orange-600 hover:bg-orange-50" 
+                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+              }`}
+            >
+              ถาม-ตอบ
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-400 to-yellow-500 group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </li>
         </ul>
 
         {/* ปุ่ม Login / โปรไฟล์ (Desktop) */}
@@ -230,27 +356,103 @@ export default function Navbar() {
         <div className="md:hidden bg-white/95 backdrop-blur-lg shadow-2xl border-t border-gray-200">
           <div className="px-6 py-4">
             <ul className="space-y-3 text-gray-700">
-              {[
-                { to: "/", label: "หน้าแรก", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
-                { to: "/about", label: "เกี่ยวกับวัด", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
-                { to: "/news", label: "ข่าวสาร", icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" },
-                { to: "/Calendar", label: "ปฎิทินกิจกรรม", icon: "M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a2 2 0 012 2v13a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2z" },
-                { to: "/Donate", label: "ทำบุญ/บริจาค", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
-                { to: "/Q&A", label: "ถาม-ตอบ", icon: "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" } // เพิ่มไอคอนคำถาม
-              ].map((item) => (
-                <li key={item.to}>
-                  <Link 
-                    to={item.to} 
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
-                    </svg>
-                    <span className="font-medium">{item.label}</span>
-                  </Link>
-                </li>
-              ))}
+              {/* หน้าแรก */}
+              <li>
+                <Link 
+                  to="/" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  </svg>
+                  <span className="font-medium">หน้าแรก</span>
+                </Link>
+              </li>
+
+              {/* เกี่ยวกับวัด */}
+              <li>
+                <Link 
+                  to="/about" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <span className="font-medium">เกี่ยวกับวัด</span>
+                </Link>
+              </li>
+
+              {/* ข่าวสาร */}
+              <li>
+                <Link 
+                  to="/news" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                  </svg>
+                  <span className="font-medium">ข่าวสาร</span>
+                </Link>
+              </li>
+
+              {/* ปฏิทินกิจกรรม */}
+              <li className="ml-6">
+                <Link 
+                  to="/Calendar" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 hover:text-green-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a1 1 0 011-1h6a1 1 0 011 1v4h3a2 2 0 012 2v13a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2z" />
+                  </svg>
+                  <span className="font-medium">ปฏิทินกิจกรรม</span>
+                </Link>
+              </li>
+
+              {/* แกลอรี่กิจกรรม */}
+              <li className="ml-6">
+                <Link 
+                  to="/gallery" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 hover:text-purple-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="font-medium">แกลอรี่กิจกรรม</span>
+                </Link>
+              </li>
+
+              {/* ทำบุญ/บริจาค */}
+              <li>
+                <Link 
+                  to="/Donate" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  <span className="font-medium">ทำบุญ/บริจาค</span>
+                </Link>
+              </li>
+
+              {/* ถาม-ตอบ */}
+              <li>
+                <Link 
+                  to="/Q&A" 
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-50 hover:to-yellow-50 hover:text-orange-600 transition-all duration-200"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="font-medium">ถาม-ตอบ</span>
+                </Link>
+              </li>
 
               {/* ปุ่ม Login / โปรไฟล์ (Mobile) */}
               <hr className="border-gray-200 my-4" />
@@ -268,7 +470,7 @@ export default function Navbar() {
                   
                   {role === "user" && (
                     <Link
-                      to="/Booking"
+                      to="/booking"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center space-x-3 p-3 rounded-xl hover:bg-blue-50 hover:text-blue-600 transition-all duration-200"
                     >

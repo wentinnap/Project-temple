@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle, XCircle, Trash2, Loader2, Search, Filter, Calendar, Clock, Users, Phone, Mail, MapPin, AlertTriangle, Eye, Download } from "lucide-react";
 import AdminLayout from "../../layouts/AdminLayout";
+import API from "../../services/api"; // นำเข้า API
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -13,9 +14,8 @@ export default function Bookings() {
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/bookings");
-      const data = await res.json();
-      setBookings(data);
+      const response = await API.get("/bookings"); // ใช้ API แทน fetch
+      setBookings(response.data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
     }
@@ -28,11 +28,7 @@ export default function Bookings() {
 
   const updateStatus = async (id, status) => {
     try {
-      await fetch(`http://localhost:5000/api/bookings/${id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
-      });
+      await API.put(`/bookings/${id}/status`, { status }); // ใช้ API แทน fetch
       fetchBookings();
     } catch (error) {
       console.error("Error updating status:", error);
@@ -42,9 +38,7 @@ export default function Bookings() {
   const deleteBooking = async (id) => {
     if (!window.confirm("คุณแน่ใจว่าจะลบการจองนี้?")) return;
     try {
-      await fetch(`http://localhost:5000/api/bookings/${id}`, {
-        method: "DELETE",
-      });
+      await API.delete(`/bookings/${id}`); // ใช้ API แทน fetch
       fetchBookings();
     } catch (error) {
       console.error("Error deleting booking:", error);

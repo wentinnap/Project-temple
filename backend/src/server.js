@@ -370,6 +370,100 @@ app.delete('/api/bookings/:id', async (req, res) => {
 
 
 
+// ===============================
+// 📸 Gallery API
+// ===============================
+
+// ตั้งค่า multer สำหรับ gallery
+const galleryStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '..', 'uploads/gallery'));
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const galleryUpload = multer({ storage: galleryStorage });
+
+// อัปโหลดรูป (admin เท่านั้น)
+app.post('/api/gallery/upload', authenticateToken, galleryUpload.single('image'), async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only admin can upload images' });
+    }
+
+    const file = req.file;
+    const url = `${process.env.SERVER_URL}/uploads/gallery/${file.filename}`;
+
+    await pool.query("INSERT INTO gallery (filename, url) VALUES (?, ?)", [
+      file.filename,
+      url
+    ]);
+
+    res.json({ message: "Upload success", url });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Upload failed" });
+  }
+});
+
+// ดึงรูปทั้งหมด
+app.get('/api/gallery', async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM gallery ORDER BY id DESC");
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching gallery" });
+  }
+});
+
+// ลบรูป
+app.delete('/api/gallery/:id', authenticateToken, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only admin can delete images' });
+    }
+
+    const { id } = req.params;
+    await pool.query("DELETE FROM gallery WHERE id=?", [id]);
+    res.json({ message: "Deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting image" });
+  }
+});
+
+
+// ===============================
+// News API (แก้ตรง image_url เช่นกัน)
+// ===============================
+app.post('/api/news', authenticateToken, upload.single('image'), async (req, res) => {
+  try {
+    if (req.user.role !== 'admin' && req.user.role !== 'monk') {
+      return res.status(403).json({ message: 'Only admin or monk can add news' });
+    }
+
+    const { title, content, date } = req.body;
+    const image_url = req.file ? `${process.env.SERVER_URL}/uploads/news/${req.file.filename}` : null;
+
+    if (!title || !content || !date) {
+      return res.status(400).json({ message: 'กรอกข้อมูลไม่ครบ' });
+    }
+
+    const [result] = await pool.execute(
+      'INSERT INTO news (title, content, image_url, date) VALUES (?, ?, ?, ?)',
+      [title, content, image_url, date]
+    );
+
+    res.json({ id: result.insertId, title, content, image_url, date });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
+  }
+});
+
+
+
+
 /* ----------------------------------
    Start Server
 ---------------------------------- */

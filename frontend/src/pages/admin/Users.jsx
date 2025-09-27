@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
+import API from "../../services/api"; // นำเข้า API
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -12,13 +13,8 @@ export default function Users() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/admin/users", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await res.json();
-      setUsers(data);
+      const response = await API.get("/admin/users"); // ใช้ API แทน fetch
+      setUsers(response.data);
     } catch (err) {
       console.error("Error:", err);
     } finally {
@@ -33,14 +29,7 @@ export default function Users() {
   // 📌 อัปเดต role
   const updateRole = async (id, role, status) => {
     try {
-      await fetch(`http://localhost:5000/api/admin/users/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({ role, status }),
-      });
+      await API.put(`/admin/users/${id}`, { role, status }); // ใช้ API แทน fetch
       fetchUsers();
     } catch (err) {
       console.error("Error:", err);
@@ -57,12 +46,7 @@ export default function Users() {
   const deleteUser = async (id) => {
     if (!window.confirm("คุณแน่ใจหรือไม่ว่าจะลบผู้ใช้นี้?")) return;
     try {
-      await fetch(`http://localhost:5000/api/admin/users/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await API.delete(`/admin/users/${id}`); // ใช้ API แทน fetch
       fetchUsers();
     } catch (err) {
       console.error("Error:", err);

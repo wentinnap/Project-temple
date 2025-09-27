@@ -5,12 +5,14 @@ import Register from "./pages/auth/Register";
 import Home from "./pages/frontend/Home";
 import About from "./pages/frontend/about";
 import NewsPage from "./pages/frontend/NewsPage";
+import Gallery from "./pages/frontend/GalleryPage";
 import TempleCalendar from "./pages/frontend/TempleCalendar";
 import Donate from "./pages/frontend/Donate";
 import QA from "./pages/frontend/Q&A";
 import Booking from "./pages/frontend/Booking";
 import AdminHome from "./pages/admin/AdminHome";
 import Adminbooking from "./pages/admin/Adminbooking";
+import AdminGallery from "./pages/admin/AdminGallery";
 import Dashboard from "./pages/admin/Dashboard";
 import Events from "./pages/admin/Events";
 import Monks from "./pages/admin/Monks";
@@ -82,6 +84,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/news" element={<NewsPage />} />
+        <Route path="/gallery" element={<Gallery />} />
         <Route path="/Calendar" element={<TempleCalendar />} />
         <Route path="/donate" element={<Donate />} />
         <Route path="/Q&A" element={<QA />} />
@@ -121,6 +124,11 @@ function App() {
         <Route path="/admin/users" element={
           <ProtectedRoute requiredRole="admin">
             <Users />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/gallery" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminGallery />
           </ProtectedRoute>
         } />
 

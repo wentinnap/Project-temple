@@ -34,7 +34,8 @@ export default function AdminSidebar() {
     { path: "/admin/Adminbooking", icon: "📖", label: "จัดการการจอง" },
     { path: "/admin/events", icon: "📅", label: "ปฏิทินกิจกรรม" },
     { path: "/admin/monks", icon: "🙏", label: "พระสงฆ์" },
-    { path: "/admin/users", icon: "👥", label: "ผู้ใช้งาน" }
+    { path: "/admin/users", icon: "👥", label: "ผู้ใช้งาน" },
+    { path: "/admin/gallery", icon: "🖼️", label: "จัดการแกลอรี่" } // 👈 เพิ่มเมนูใหม่
   ];
 
   return (

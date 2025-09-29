@@ -118,7 +118,7 @@ const TempleEventCalendar = () => {
 
   return (
     <LayoutHome fullWidth>
-    <section className="relative w-full">
+    <section className="relative h-100 w-full">
   <div className="absolute inset-0">
     <img
       src="/src/assets/heroabout.png" 

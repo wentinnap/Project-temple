@@ -4,7 +4,7 @@ export default function About() {
   return (
     <LayoutHome fullWidth>
      {/* Hero Section */}
-<section className="relative w-full">
+<section className="relative h-100 w-full">
   <div className="absolute inset-0">
     <img
       src="/src/assets/heroabout.png" 
@@ -43,16 +43,19 @@ export default function About() {
         <h2 className="text-2xl font-bold text-center mb-10">เหตุการณ์สำคัญ</h2>
         <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-6">
           <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h3 className="font-semibold text-lg mb-2">พ.ศ. ๒๔๙๐</h3>
-            <p>ก่อตั้งวัดกำแพงและเริ่มสร้างอุโบสถหลังแรก</p>
+            <h3 className="font-semibold text-lg mb-2">พ.ศ. 2220–2226</h3>
+            <p>• วัดกำแพงสร้างขึ้นราว พ.ศ. 2220 ปลายสมัยอยุธยา เดิมชื่อว่า 
+              วัดส้มป่อยต่อมาได้รับพระราชทาน วิสุงคามสีมา (เขตอุโบสถ) ใน พ.ศ. 2226</p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="font-semibold text-lg mb-2">พ.ศ. ๒๕๐๕</h3>
-            <p>บูรณะพระวิหารและสร้างพระประธานองค์ใหญ่</p>
+            <p> หลังจากอยุธยาล่มสลาย วัดมีการทรุดโทรมไปตามกาลเวลา
+ • ช่วงรัตนโกสินทร์ตอนต้น–กลาง มีการ บูรณะอุโบสถ เจดีย์ และโบราณสถาน ครั้งใหญ่ โดยชาวบ้านและคณะสงฆ์ร่วมแรงร่วมใจ</p>
           </div>
           <div className="bg-white p-6 rounded-2xl shadow-md">
             <h3 className="font-semibold text-lg mb-2">พ.ศ. ๒๕๕๐</h3>
-            <p>จัดงานฉลองครบ ๖๐ ปี และสร้างหอสมุดธรรมะ</p>
+            <p>• วัดกำแพงกลายเป็น สถานที่ประกอบพิธีสำคัญของชาวบางเขน นนทบุรี เช่น งานกฐิน ผ้าป่า และงานสรงน้ำพระ
+  ในบางปี วัดได้จัด พิธีสร้าง/แจกวัตถุมงคล เพื่อช่วยเหลือชุมชนและหารายได้บูรณะวัด เช่น ช่วงวิกฤตเศรษฐกิจและโควิด-19</p>
           </div>
         </div>
       </section>

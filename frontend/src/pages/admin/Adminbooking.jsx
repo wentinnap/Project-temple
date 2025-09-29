@@ -11,13 +11,19 @@ export default function Bookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  // ป้องกัน Error ด้วยการสร้างตัวแปร safe
+  const safeBookings = Array.isArray(bookings) ? bookings : [];
+
   const fetchBookings = async () => {
     setLoading(true);
     try {
-      const response = await API.get("/bookings"); // ใช้ API แทน fetch
-      setBookings(response.data);
+      const response = await API.get("/bookings");
+      console.log("API Response:", response.data); // Debug
+      // ตรวจสอบให้แน่ใจว่าได้ Array
+      setBookings(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.error("Error fetching bookings:", error);
+      setBookings([]); // set เป็น array เปล่าเมื่อ error
     }
     setLoading(false);
   };
@@ -28,7 +34,7 @@ export default function Bookings() {
 
   const updateStatus = async (id, status) => {
     try {
-      await API.put(`/bookings/${id}/status`, { status }); // ใช้ API แทน fetch
+      await API.put(`/bookings/${id}/status`, { status });
       fetchBookings();
     } catch (error) {
       console.error("Error updating status:", error);
@@ -38,14 +44,15 @@ export default function Bookings() {
   const deleteBooking = async (id) => {
     if (!window.confirm("คุณแน่ใจว่าจะลบการจองนี้?")) return;
     try {
-      await API.delete(`/bookings/${id}`); // ใช้ API แทน fetch
+      await API.delete(`/bookings/${id}`);
       fetchBookings();
     } catch (error) {
       console.error("Error deleting booking:", error);
     }
   };
 
-  const filteredBookings = bookings.filter(booking => {
+  // ใช้ safeBookings แทน bookings
+  const filteredBookings = safeBookings.filter(booking => {
     const matchesSearch = 
       booking.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       booking.ceremony?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -242,10 +249,10 @@ export default function Bookings() {
           <p className="opacity-90">รายการการจองพิธีกรรมทั้งหมด</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - ใช้ safeBookings แทน bookings */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {["all", "pending", "confirmed", "cancelled"].map((status) => {
-            const count = status === "all" ? bookings.length : bookings.filter(b => b.status === status).length;
+            const count = status === "all" ? safeBookings.length : safeBookings.filter(b => b.status === status).length;
             const config = getStatusConfig(status);
             const StatusIcon = config.icon;
             

@@ -3,7 +3,7 @@ import LayoutHome from "../../layouts/frontend";
 export default function About() {
   return (
     <LayoutHome fullWidth>
- <section className="relative w-full">
+ <section className="relative h-100 w-full">
         <div className="absolute inset-0">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/65/Wat_Phra_Kaew_Bangkok.jpg"

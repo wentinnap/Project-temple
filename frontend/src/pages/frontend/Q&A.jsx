@@ -125,7 +125,7 @@ const QAPage = () => {
     <LayoutHome fullWidth>
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-orange-100 pt-20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-orange-600 to-yellow-600 text-white py-16">
+      <div className="relative h-100 bg-gradient-to-r from-orange-600 to-yellow-600 text-white py-16">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <MessageCircle className="mx-auto mb-6 drop-shadow-lg" size={80} />
           <h1 className="text-4xl md:text-6xl font-bold mb-4">

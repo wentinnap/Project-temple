@@ -111,7 +111,7 @@ export default function GalleryPage() {
     <LayoutHome fullWidth>
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50">
         {/* Header Section */}
-        <div className="relative bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 text-white py-20">
+        <div className="relative h-100 bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 text-white py-20">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="relative max-w-7xl mx-auto px-6 text-center">
             <h1 className="text-5xl font-bold mb-4">แกลอรี่กิจกรรม</h1>

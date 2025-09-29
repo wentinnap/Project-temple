@@ -13,7 +13,6 @@ import Booking from "./pages/frontend/Booking";
 import AdminHome from "./pages/admin/AdminHome";
 import Adminbooking from "./pages/admin/Adminbooking";
 import AdminGallery from "./pages/admin/AdminGallery";
-import Dashboard from "./pages/admin/Dashboard";
 import Events from "./pages/admin/Events";
 import Monks from "./pages/admin/Monks";
 import News from "./pages/admin/News";
@@ -94,11 +93,6 @@ function App() {
         <Route path="/admin" element={
           <ProtectedRoute requiredRole="admin">
             <AdminHome />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin/dashboard" element={
-          <ProtectedRoute requiredRole="admin">
-            <Dashboard />
           </ProtectedRoute>
         } />
         <Route path="/admin/Adminbooking" element={

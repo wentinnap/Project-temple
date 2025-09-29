@@ -29,7 +29,6 @@ export default function AdminSidebar() {
 
   const menuItems = [
     { path: "/admin", icon: "🏠", label: "หน้าแรก" },
-    { path: "/admin/dashboard", icon: "📊", label: "แดชบอร์ด" },
     { path: "/admin/news", icon: "📰", label: "จัดการข่าว" },
     { path: "/admin/Adminbooking", icon: "📖", label: "จัดการการจอง" },
     { path: "/admin/events", icon: "📅", label: "ปฏิทินกิจกรรม" },

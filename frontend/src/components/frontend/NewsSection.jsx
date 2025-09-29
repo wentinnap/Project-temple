@@ -11,7 +11,7 @@ export default function NewsSection() {
 
   const fetchNews = async () => {
     try {
-      const res = await API.get('/public/news');
+      const res = await API.get("/news");
       setNews(res.data);
     } catch (err) {
       console.error('Error fetching news:', err);
@@ -127,7 +127,7 @@ export default function NewsSection() {
                   {item.image_url ? (
                     <div className="h-56 bg-gray-200 overflow-hidden">
                       <img
-                        src={`http://localhost:5000${item.image_url}`}
+                        src={item.image_url}
                         alt={item.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />

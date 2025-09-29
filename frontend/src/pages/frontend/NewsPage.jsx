@@ -28,7 +28,7 @@ export default function NewsPage() {
   return (
     <LayoutHome fullWidth>
       {/* Hero Section */}
-      <section className="relative h-90 flex items-center justify-center bg-gray-800 text-white">
+      <section className="relative h-100 flex items-center justify-center bg-gray-800 text-white">
         <img
           src="https://source.unsplash.com/1600x600/?temple,news"
           alt="ข่าวสาร"

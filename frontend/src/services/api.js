@@ -1,4 +1,3 @@
-// services/api.js
 import axios from 'axios';
 
 // สร้าง instance ของ axios
@@ -22,27 +21,13 @@ API.interceptors.request.use(
     
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // ⭐ Interceptor สำหรับจัดการ error
 API.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // ถ้า token หมดอายุหรือไม่ถูกต้อง (401)
-    if (error.response && error.response.status === 401) {
-      // ลบ token เก่า
-      localStorage.removeItem('token');
-      
-      // Redirect ไปหน้า login
-      window.location.href = '/login';
-      
-      alert('Session หมดอายุ กรุณา Login ใหม่');
-    }
     
     return Promise.reject(error);
   }

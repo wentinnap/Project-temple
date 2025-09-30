@@ -11,10 +11,11 @@ export default function NewsSection() {
 
   const fetchNews = async () => {
     try {
-      const res = await API.get("/news");
+      const res = await API.get("/news/public");
       setNews(res.data);
     } catch (err) {
-      console.error('Error fetching news:', err);
+      // ❌ ตัด console.error ออก
+      // เงียบไปเลยไม่แจ้งเตือนอะไร
     } finally {
       setLoading(false);
     }
@@ -36,7 +37,6 @@ export default function NewsSection() {
   if (loading) {
     return (
       <section className="py-16 bg-gradient-to-br from-orange-50 via-gray-50 to-orange-50 relative overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
             backgroundImage: `radial-gradient(circle at 25% 25%, #FD5A00 2px, transparent 2px),

@@ -49,8 +49,8 @@ export default function Footer() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <div>
-                  <p className="text-orange-100">วัดกำแพง ตำบลทดสอบ อำเภอเมือง</p>
-                  <p className="text-orange-100">จังหวัดกรุงเทพฯ 10200</p>
+                  <p className="text-orange-100">วัดกำแพง ตำบลบางเขน อำเภอเมือง</p>
+                  <p className="text-orange-100">จังหวัดนนทบุรี 10200</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

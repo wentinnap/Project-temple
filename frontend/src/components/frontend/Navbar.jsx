@@ -125,7 +125,7 @@ export default function Navbar() {
               className={`flex items-center px-4 py-2.5 rounded-lg transition-all duration-300 relative ${
                 scrolled 
                   ? "hover:text-orange-600 hover:bg-orange-50" 
-                  : "hover:text-orange-300 hover:bg-white/10 backdrop-blur-sm"
+                  : "hover:text-orange-300 hover:bg-white/10 "
               } ${isNewsDropdownOpen ? (scrolled ? 'bg-orange-50 text-orange-600' : 'bg-white/10 text-orange-300') : ''}`}
               onClick={() => setIsNewsDropdownOpen(!isNewsDropdownOpen)}
             >
@@ -146,8 +146,8 @@ export default function Navbar() {
               <div 
                 className={`absolute top-full left-0 mt-3 w-64 rounded-xl shadow-2xl py-3 border overflow-hidden z-50 ${
                   scrolled 
-                    ? 'bg-white/95 backdrop-blur-lg border-gray-200 text-gray-700' 
-                    : 'bg-white/90 backdrop-blur-lg border-white/20 text-gray-700'
+                    ? "bg-white/95 backdrop-blur-lg shadow-xl border-b border-gray-200" 
+                    : "bg-gradient-to-r from-black/70 via-black/60 to-black/70 backdrop-blur-sm"
                 }`}
               >
                 <Link

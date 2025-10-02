@@ -18,20 +18,35 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // 📌 ดึงข่าวล่าสุด (public)
+// 📌 Public route (มี pagination)
 router.get("/public", async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const offset = (page - 1) * limit;
+
     const [rows] = await pool.execute(
-      "SELECT id, title, content, image_url, date FROM news ORDER BY date DESC LIMIT 6"
+      "SELECT id, title, content, image_url, date FROM news ORDER BY date DESC LIMIT ? OFFSET ?",
+      [limit, offset]
     );
-    res.json(rows);
+
+    const [countRows] = await pool.execute("SELECT COUNT(*) as count FROM news");
+    const totalNews = countRows[0].count;
+    const totalPages = Math.ceil(totalNews / limit);
+
+    res.json({
+      news: rows,
+      totalPages,
+      currentPage: page,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "เกิดข้อผิดพลาด" });
   }
 });
 
-// 📌 ดึงข่าวทั้งหมด (admin/monk เท่านั้น)
-router.get("/", authenticateToken, async (req, res) => {
+// 📌 Admin/monk เท่านั้น
+router.get("/all", authenticateToken, async (req, res) => {
   try {
     const [rows] = await pool.execute("SELECT * FROM news ORDER BY date DESC");
     res.json(rows);
@@ -40,6 +55,7 @@ router.get("/", authenticateToken, async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาด" });
   }
 });
+
 
 // 📌 ดึงข่าวตาม id
 router.get("/:id", async (req, res) => {

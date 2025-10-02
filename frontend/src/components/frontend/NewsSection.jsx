@@ -1,68 +1,134 @@
-import { useState, useEffect } from 'react';
-import API from '../../services/api';
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Newspaper, Calendar, ArrowRight, AlertCircle, RefreshCw } from "lucide-react";
 
 export default function NewsSection() {
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const res = await fetch("http://localhost:5000/api/news/public?limit=6&page=1");
+        
+        if (!res.ok) {
+          throw new Error("ไม่สามารถโหลดข่าวได้");
+        }
+        
+        const data = await res.json();
+
+        let newsArray = [];
+        
+        if (Array.isArray(data)) {
+          newsArray = data;
+        } else if (data.news && Array.isArray(data.news)) {
+          newsArray = data.news;
+        } else if (data.data && Array.isArray(data.data)) {
+          newsArray = data.data;
+        }
+
+        const latestNews = newsArray
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .slice(0, 6);
+
+        setNews(latestNews);
+      } catch (err) {
+        console.error("Error fetching news:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchNews();
   }, []);
 
-  const fetchNews = async () => {
-    try {
-      const res = await API.get("/news/public");
-      setNews(res.data);
-    } catch (err) {
-      // ❌ ตัด console.error ออก
-      // เงียบไปเลยไม่แจ้งเตือนอะไร
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const truncateText = (text, maxLength = 120) => {
-    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('th-TH', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
   if (loading) {
     return (
-      <section className="py-16 bg-gradient-to-br from-orange-50 via-gray-50 to-orange-50 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, #FD5A00 2px, transparent 2px),
-                             radial-gradient(circle at 75% 75%, #FD5A00 1px, transparent 1px)`,
-            backgroundSize: '50px 50px, 30px 30px'
-          }}></div>
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header with Icon */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                </svg>
-              </div>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+              <Newspaper className="w-8 h-8 text-orange-600" />
             </div>
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-orange-800 to-orange-600 bg-clip-text text-transparent mb-4">
-              ข่าวสารจากวัด
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-700 mx-auto rounded-full"></div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-3">ข่าวสารล่าสุด</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
           </div>
-          
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin w-12 h-12 border-4 border-orange-200 border-t-orange-600 rounded-full"></div>
-            <span className="ml-4 text-orange-700 font-medium">กำลังโหลดข่าวสาร...</span>
+
+          {/* Loading Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
+                <div className="w-full h-56 bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                <div className="p-6">
+                  <div className="h-6 bg-gray-200 rounded-lg mb-3"></div>
+                  <div className="h-6 bg-gray-200 rounded-lg w-3/4 mb-4"></div>
+                  <div className="flex items-center justify-between">
+                    <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                    <div className="h-4 bg-gray-200 rounded w-16"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+              <Newspaper className="w-8 h-8 text-orange-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-3">ข่าวสารล่าสุด</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
+          </div>
+
+          <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 text-center border border-red-100">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">เกิดข้อผิดพลาด</h3>
+            <p className="text-gray-600 mb-6">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <RefreshCw className="w-5 h-5" />
+              โหลดใหม่
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (news.length === 0) {
+    return (
+      <section className="py-20 bg-gradient-to-b from-orange-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-100 rounded-full mb-4">
+              <Newspaper className="w-8 h-8 text-orange-600" />
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-3">ข่าวสารล่าสุด</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
+          </div>
+
+          <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl p-12 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 rounded-full mb-4">
+              <Newspaper className="w-10 h-10 text-gray-400" />
+            </div>
+            <p className="text-gray-500 text-lg">ยังไม่มีข่าวสาร</p>
           </div>
         </div>
       </section>
@@ -70,132 +136,97 @@ export default function NewsSection() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50 via-orange-50 to-orange-50 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 25% 25%, #FD5A00 2px, transparent 2px),
-                           radial-gradient(circle at 75% 75%, #FD5A00 1px, transparent 1px)`,
-          backgroundSize: '50px 50px, 30px 30px'
-        }}></div>
-      </div>
-
+    <section className="py-20 bg-gradient-to-b from-orange-50 to-white relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-10 left-10 w-20 h-20 bg-orange-200/30 rounded-full blur-xl"></div>
-      <div className="absolute bottom-20 right-10 w-32 h-32 bg-orange-300/20 rounded-full blur-2xl"></div>
+      <div className="absolute top-0 left-0 w-64 h-64 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 translate-x-1/2 translate-y-1/2"></div>
       
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-              </svg>
-            </div>
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mb-4 shadow-lg">
+            <Newspaper className="w-8 h-8 text-white" />
           </div>
-          
-          <h2 className="text-5xl font-bold bg-gradient-to-r from-orange-800 to-orange-600 bg-clip-text text-transparent mb-6">
-            ข่าวสารจากวัด
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+            ข่าวสาร<span className="text-orange-600">ล่าสุด</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-orange-500 to-orange-700 mx-auto rounded-full mb-6"></div>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
-            ติดตามข่าวสารและกิจกรรมต่างๆ ของวัด เพื่อร่วมทำบุญและสร้างสรรค์สังคมไปด้วยกัน
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-4">
+            ติดตามข่าวสารและกิจกรรมต่างๆ ของวัดกำแพง
           </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-orange-400 to-orange-600 mx-auto rounded-full"></div>
         </div>
 
-        {news.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 bg-gradient-to-r from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-12 h-12 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">ยังไม่มีข่าวสาร</h3>
-            <p className="text-gray-500">กำลังเตรียมข่าวสารและกิจกรรมดีๆ มาเพื่อทุกท่าน</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {news.map((item, index) => (
-              <div 
-                key={item.id} 
-                className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                {/* Image Section */}
-                <div className="relative overflow-hidden">
-                  {item.image_url ? (
-                    <div className="h-56 bg-gray-200 overflow-hidden">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                  ) : (
-                    <div className="h-56 bg-gradient-to-br from-orange-100 via-orange-200 to-orange-300 flex items-center justify-center relative">
-                      <div className="text-orange-600 text-6xl opacity-60 transform group-hover:scale-110 transition-transform duration-300">
-                        <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-br from-orange-400/10 to-orange-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                  )}
-                  
-                  {/* Date Badge */}
-                  <div className="absolute top-4 left-4">
-                    <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg backdrop-blur-sm">
-                      {formatDate(item.date)}
-                    </div>
-                  </div>
+        {/* News Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          {news.map((item, index) => (
+            <div
+              key={item.id}
+              className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              {/* Image Container */}
+              <div className="relative h-56 overflow-hidden bg-gradient-to-br from-orange-100 to-orange-200">
+                <img
+                  src={item.image_url || "/placeholder-news.jpg"}
+                  alt={item.title}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  onError={(e) => {
+                    e.target.src = "/placeholder-news.jpg";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                
+                {/* Badge */}
+                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-orange-600 shadow-lg">
+                  ข่าวใหม่
                 </div>
-
-                <div className="p-6">
-                  {/* Title */}
-                  <h3 className="text-xl font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-orange-700 transition-colors duration-300">
-                    {item.title}
-                  </h3>
-
-                  {/* Content */}
-                  <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
-                    {truncateText(item.content)}
-                  </p>
-
-                  {/* Read More Button */}
-                  <button className="inline-flex items-center text-orange-600 font-medium hover:text-orange-700 transition-all duration-300 group-hover:translate-x-1">
-                    <span>อ่านต่อ</span>
-                    <svg className="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Bottom Gradient Line */}
-                <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-            ))}
-          </div>
-        )}
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-orange-600 transition-colors">
+                  {item.title}
+                </h3>
+                
+                {/* Content Preview */}
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                  {item.content ? item.content.replace(/<[^>]*>/g, '') : 'ไม่มีรายละเอียด'}
+                </p>
+                
+                {/* Date */}
+                <div className="flex items-center text-sm text-gray-500 mb-4 pb-4 border-b border-gray-100">
+                  <Calendar className="w-4 h-4 mr-2 text-orange-500" />
+                  {new Date(item.created_at || item.date).toLocaleDateString("th-TH", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </div>
+
+                {/* Read More Link */}
+                <Link
+                  to={`/news/${item.id}`}
+                  className="inline-flex items-center gap-2 text-orange-600 font-semibold hover:text-orange-700 group/link"
+                >
+                  <span>อ่านต่อ</span>
+                  <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* View All Button */}
-        {news.length > 0 && (
-          <div className="text-center mt-16">
-            <button className="group relative inline-flex items-center bg-gradient-to-r from-orange-600 to-orange-700 text-white px-10 py-4 rounded-2xl hover:from-orange-700 hover:to-orange-800 transition-all duration-300 font-medium text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-              <svg className="w-5 h-5 mr-3 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-              </svg>
-              ดูข่าวสารทั้งหมด
-              <svg className="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-              
-              {/* Button Glow Effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-orange-600 to-orange-700 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
-            </button>
-          </div>
-        )}
+        <div className="text-center">
+          <Link
+            to="/news"
+            className="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 group"
+          >
+            <Newspaper className="w-5 h-5" />
+            <span>ดูข่าวทั้งหมด</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </section>
   );

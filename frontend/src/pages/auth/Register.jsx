@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../../services/api";
-import { User, Mail, Lock, Home } from "lucide-react"; // 👈 เพิ่ม Home
+import { User, Mail, Lock, Home } from "lucide-react";
 import logo from "../../assets/logo.png";
 
 export default function Register() {
@@ -13,6 +13,11 @@ export default function Register() {
   const [error, setError] = useState("");
   const [strengthScore, setStrengthScore] = useState(0);
   const navigate = useNavigate();
+
+  // 👉 เพิ่มฟังก์ชันสำหรับ Google
+  const googleLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  };
 
   // คำนวณความแข็งแรงของ password
   const calculateStrength = (pwd) => {
@@ -184,6 +189,22 @@ export default function Register() {
           className="w-full bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition"
         >
           สมัครสมาชิก
+        </button>
+
+        {/* Google Button */}
+        <button
+          type="button"
+          onClick={googleLogin}
+          className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 
+                     bg-red-500 text-white font-medium rounded-lg shadow-md 
+                     hover:bg-red-600 hover:scale-105 transition"
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          สมัคร / เข้าสู่ระบบด้วย Google
         </button>
 
         {/* Back Home Button */}

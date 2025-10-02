@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import AuthSuccess from "./pages/auth/AuthSuccess";
 import Home from "./pages/frontend/Home";
 import About from "./pages/frontend/about";
 import NewsPage from "./pages/frontend/NewsPage";
@@ -13,6 +14,7 @@ import Booking from "./pages/frontend/Booking";
 import AdminHome from "./pages/admin/AdminHome";
 import Adminbooking from "./pages/admin/Adminbooking";
 import AdminGallery from "./pages/admin/AdminGallery";
+import AdminQandA from "./pages/admin/AdminQandA";
 import Events from "./pages/admin/Events";
 import Monks from "./pages/admin/Monks";
 import News from "./pages/admin/News";
@@ -78,6 +80,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/auth-success" element={<AuthSuccess />} />
 
         {/* Home & About */}
         <Route path="/" element={<Home />} />
@@ -125,6 +128,14 @@ function App() {
             <AdminGallery />
           </ProtectedRoute>
         } />
+        
+         <Route path="/admin/qna" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminQandA />
+          </ProtectedRoute>
+        } />
+
+
 
         {/* 404 - redirect ไปหน้าแรก */}
         <Route path="*" element={<Navigate to="/" replace />} />

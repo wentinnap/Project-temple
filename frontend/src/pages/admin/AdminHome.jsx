@@ -28,10 +28,10 @@ const AdminDashboard = () => {
     
     try {
       // Fetch all data in parallel
-      const [usersRes, bookingsRes, newsRes] = await Promise.all([
+         const [usersRes, bookingsRes, newsRes] = await Promise.all([
         API.get('/admin/users').catch(() => ({ data: [] })),
         API.get('/bookings').catch(() => ({ data: [] })),
-        API.get('/news').catch(() => ({ data: [] }))
+        API.get('/news/all').catch(() => ({ data: [] }))
       ]);
 
       setStats({

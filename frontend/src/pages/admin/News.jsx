@@ -20,10 +20,12 @@ export default function News() {
   const fetchNews = async () => {
     setLoading(true);
     try {
-      const res = await API.get("/news");
+      // ✅ แก้ไข: เพิ่ม /news ข้างหน้า
+      const res = await API.get("/news/all");
       setNewsList(res.data);
     } catch (err) {
       console.error(err);
+      alert("ไม่สามารถโหลดข่าวได้");
     } finally {
       setLoading(false);
     }
@@ -60,6 +62,7 @@ export default function News() {
       const res = await API.post("/news", data, { headers: { "Content-Type": "multipart/form-data" } });
       setNewsList(prev => [res.data, ...prev]);
       resetForm();
+      alert("เพิ่มข่าวสำเร็จ!");
     } catch (err) {
       console.error(err);
       alert("เกิดข้อผิดพลาดเพิ่มข่าว");
@@ -70,7 +73,7 @@ export default function News() {
 
   const handleEdit = (news) => {
     setForm({ title: news.title, date: news.date.slice(0,10), content: news.content });
-    setPreview(news.image ? `${API.defaults.baseURL}${news.image}` : null);
+    setPreview(news.image_url || null);
     setIsEditing(true);
     setEditId(news.id);
     setImageFile(null);
@@ -89,6 +92,7 @@ export default function News() {
       const res = await API.put(`/news/${editId}`, data, { headers: { "Content-Type": "multipart/form-data" } });
       setNewsList(prev => prev.map(n => (n.id === editId ? res.data : n)));
       resetForm();
+      alert("อัปเดตข่าวสำเร็จ!");
     } catch (err) {
       console.error(err);
       alert("เกิดข้อผิดพลาดอัปเดตข่าว");
@@ -101,8 +105,10 @@ export default function News() {
     if (!confirm("คุณแน่ใจหรือไม่ที่จะลบ?")) return;
     setLoading(true);
     try {
-      await API.delete(`news/${id}`);
+      // ✅ แก้ไข: เพิ่ม / ข้างหน้า
+      await API.delete(`/news/${id}`);
       setNewsList(prev => prev.filter(n => n.id !== id));
+      alert("ลบข่าวสำเร็จ!");
     } catch (err) {
       console.error(err);
       alert("ลบไม่สำเร็จ");
@@ -331,9 +337,9 @@ export default function News() {
                       <tr key={n.id} className="hover:bg-orange-50 transition-colors duration-200">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{i + 1}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {n.image ? (
+                          {n.image_url ? (
                             <img 
-                              src={`${API.defaults.baseURL}${n.image}`} 
+                              src={n.image_url} 
                               alt="" 
                               className="w-16 h-12 object-cover rounded-lg shadow-sm border border-orange-200" 
                             />

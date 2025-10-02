@@ -1,5 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { 
+  Home, 
+  Newspaper, 
+  Calendar, 
+  CalendarDays, 
+  Users, 
+  UserCheck, 
+  Image, 
+  HelpCircle,
+  LogOut,
+  ArrowRight,
+  Info,
+  Clock
+} from "lucide-react";
 import logoadmin from "../../assets/logoadmin.png";
 
 export default function AdminSidebar() {
@@ -28,13 +42,14 @@ export default function AdminSidebar() {
   };
 
   const menuItems = [
-    { path: "/admin", icon: "🏠", label: "หน้าแรก" },
-    { path: "/admin/news", icon: "📰", label: "จัดการข่าว" },
-    { path: "/admin/Adminbooking", icon: "📖", label: "จัดการการจอง" },
-    { path: "/admin/events", icon: "📅", label: "ปฏิทินกิจกรรม" },
-    { path: "/admin/monks", icon: "🙏", label: "พระสงฆ์" },
-    { path: "/admin/users", icon: "👥", label: "ผู้ใช้งาน" },
-    { path: "/admin/gallery", icon: "🖼️", label: "จัดการแกลอรี่" } // 👈 เพิ่มเมนูใหม่
+    { path: "/admin", icon: Home, label: "หน้าแรก" },
+    { path: "/admin/news", icon: Newspaper, label: "จัดการข่าว" },
+    { path: "/admin/Adminbooking", icon: Calendar, label: "จัดการการจอง" },
+    { path: "/admin/events", icon: CalendarDays, label: "ปฏิทินกิจกรรม" },
+    { path: "/admin/monks", icon: UserCheck, label: "พระสงฆ์" },
+    { path: "/admin/users", icon: Users, label: "ผู้ใช้งาน" },
+    { path: "/admin/gallery", icon: Image, label: "จัดการแกลอรี่" },
+    { path: "/admin/qna", icon: HelpCircle, label: "ถาม-ตอบ" }
   ];
 
   return (
@@ -94,32 +109,31 @@ export default function AdminSidebar() {
           </h3>
         </div>
         
-        {menuItems.map((item, index) => (
-          <Link
-            key={item.path}
-            to={item.path}
-            className="group flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:shadow-lg hover:shadow-blue-500/25"
-          >
-            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-gray-700 rounded-lg group-hover:bg-white/20 transition-colors duration-300">
-              <span className="text-lg">{item.icon}</span>
-            </div>
-            <span className="font-medium text-gray-200 group-hover:text-white transition-colors duration-300">
-              {item.label}
-            </span>
-            <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-          </Link>
-        ))}
+        {menuItems.map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className="group flex items-center space-x-3 p-3 rounded-xl transition-all duration-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:shadow-lg hover:shadow-blue-500/25"
+            >
+              <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-gray-700 rounded-lg group-hover:bg-white/20 transition-colors duration-300">
+                <IconComponent className="w-5 h-5 text-gray-300 group-hover:text-white" />
+              </div>
+              <span className="font-medium text-gray-200 group-hover:text-white transition-colors duration-300">
+                {item.label}
+              </span>
+              <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <ArrowRight className="w-4 h-4 text-white" />
+              </div>
+            </Link>
+          );
+        })}
         
         <div className="mt-6 p-3 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl">
           <div className="flex items-center space-x-2 mb-2">
             <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <Info className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm font-medium text-yellow-400">Tips</span>
           </div>
@@ -132,7 +146,10 @@ export default function AdminSidebar() {
       {/* Footer Section */}
       <div className="relative z-10 border-t border-gray-700 p-4">
         <div className="mb-3 text-center">
-          <div className="text-xs text-gray-400 mb-1">เวลาทำงาน</div>
+          <div className="flex items-center justify-center space-x-2 mb-1">
+            <Clock className="w-3 h-3 text-gray-400" />
+            <div className="text-xs text-gray-400">เวลาทำงาน</div>
+          </div>
           <div className="text-sm text-green-400 font-medium">
             {new Date().toLocaleTimeString('th-TH', { 
               hour: '2-digit', 
@@ -146,14 +163,7 @@ export default function AdminSidebar() {
             to="/"
             className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 p-3 rounded-xl text-white transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 flex items-center justify-center space-x-2 group"
           >
-            <svg 
-              className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
+            <Home className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
             <span className="font-medium">กลับหน้าแรก</span>
           </Link>
           
@@ -161,14 +171,7 @@ export default function AdminSidebar() {
             onClick={handleLogout}
             className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 p-3 rounded-xl text-white transition-all duration-300 hover:shadow-lg hover:shadow-red-500/25 flex items-center justify-center space-x-2 group"
           >
-            <svg 
-              className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
+            <LogOut className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             <span className="font-medium">ออกจากระบบ</span>
           </button>
         </div>

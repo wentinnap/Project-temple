@@ -29,6 +29,11 @@ export default function Login() {
     }
   };
 
+  // 👉 URL backend (เปลี่ยนเป็นของจริงถ้า deploy แล้ว)
+  const googleLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-orange-100 via-white to-orange-50">
       <form
@@ -84,6 +89,22 @@ export default function Login() {
           เข้าสู่ระบบ
         </button>
 
+        {/* Google Login Button */}
+        <button
+          type="button"
+          onClick={googleLogin}
+          className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-2 
+                     bg-red-500 text-white font-medium rounded-lg shadow-md 
+                     hover:bg-red-600 hover:scale-105 transition"
+        >
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          เข้าสู่ระบบด้วย Google
+        </button>
+
         {/* Back Home Button */}
         <button
           type="button"
@@ -96,8 +117,6 @@ export default function Login() {
           กลับหน้าแรก
         </button>
 
-
-
         {/* Register Link */}
         <p className="text-sm text-gray-600 mt-4 text-center">
           ยังไม่มีบัญชี?{" "}
@@ -108,7 +127,6 @@ export default function Login() {
             สมัครสมาชิก
           </span>
         </p>
-
       </form>
     </div>
   );
